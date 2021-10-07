@@ -1,0 +1,28 @@
+{
+  "name": "to-do-project",
+  "version": "1.0.0",
+  "description": "To Do list project for Javascript Practice",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OrenAgmon/ToDo.git"
+  },
+  "author": "oren-agmon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OrenAgmon/ToDo/issues"
+  },
+  "homepage": "https://github.com/OrenAgmon/ToDo#readme",
+  "devDependencies": {
+    "webpack": "^5.57.1",
+    "webpack-cli": "^4.8.0"
+  },
+  "dependencies": {
+    "date-fns": "^2.25.0",
+    "material-design-icons": "^3.0.1"
+  }
+}
