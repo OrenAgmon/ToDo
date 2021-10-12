@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo </title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
+
 <body>
+
+
+
+    </div>
     <header>Todo List</header>
     <div class="main-section">
         <div class="sidebar">
@@ -26,16 +31,66 @@
                 <span class="side-text">This Week</span>
             </button>
             <p id="all-proj-title">All Projects</p>
+            <div class="all-proj-container">
+                <button class="side-proj custom-proj">
+                    <div class="right-proj-section">
+                        <span class="side-icon material-icons">label</span>
+                        <span class="side-text">My Project</span>
+                    </div>
+                    <span class="delete-proj-icon material-icons">close</span>
+                </button>
+            </div>
+            <button class="create-project side-proj">
+                <span class="side-icon material-icons">add</span>
+                <span class="side-text">Add</span>
+            </button>
+            <div class="proj-input-container">
+
+                <input type="text" id="new-proj-text">
+                <div class="apply-proj-container">
+                    <button class="save-proj apply-proj">Save</button>
+                    <button class="discard-proj apply-proj">Discard</button>
+                </div>
+            </div>
+
         </div>
+
         <div class="task-section">
             <p id="main-title">project-title</p>
+            <div class="tasks-container">
+          
+            </div>
+
             <button class="add-task">
-                <span class="addtask-icon">icon</span>
-                <span class="addtask-text">text</span>
+                <span class="addtask-icon material-icons">add</span>
+                <span class="addtask-text">Add Task</span>
             </button>
+
+            <div class="task-input-container">
+                <div class="text-input-container">
+                    <input type="text" id="task-text-input" placeholder="Task Name">
+                </div>
+                <div class="apply-container">
+                    <button class="save-task apply-task">Save</button>
+                    <button class="cancel-task apply-task">Delete</button>
+                </div>
+            </div>
         </div>
     </div>
     <footer>Copyrights reserved</footer>
     <script src="main.js"></script>
 </body>
+
 </html>
+
+
+<!-- <div class="task-container">
+    <div class="name-icon-container">
+        <span class="check-icon material-icons">check_box_outline_blank</span>
+        <p class="task-name">Fill Jewish Agency forms</p>
+    </div>
+    <div class="date-del-container">
+        <input type="date" id="due-date" name="due-date" start="2021-4-10">
+        <span class="delete-task material-icons">delete</span>
+    </div>
+</div> -->
