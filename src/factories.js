@@ -40,12 +40,16 @@ const Task = function (taskName) {
         let currentMonth = today.getMonth()
         let currentDate = today.getDate();
         let currentDay = today.getDay()
+        let taskYear, taskMonth, taskDate, taskDay;
 
+        if(dueDate instanceof Date){
+             taskYear = dueDate.getFullYear()
+             taskMonth = dueDate.getMonth()
+             taskDate = dueDate.getDate();
+             taskDay = dueDate.getDay()
 
-        let taskYear = dueDate.getFullYear()
-        let taskMonth = dueDate.getMonth()
-        let taskDate = dueDate.getDate();
-        let taskDay = dueDate.getDate()
+        }
+      
 
         if (taskYear == currentYear && taskMonth == currentMonth
             && (taskDate - currentDate) < 7

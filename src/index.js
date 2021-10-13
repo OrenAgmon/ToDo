@@ -50,28 +50,35 @@ const domManager = (function () {
     function handleProjectClick(projectName) {
         if (projectName == 'Today') {
             let todayArray = dataManager.filterArrayByDay(dataManager.allTasksProject.getTaskArray())
-            updateTodayArray(todayArray)
+            dataManager.todayProject.setTaskArray(todayArray)
             updateDomProjectDisp(todayArray)
         }
-
-
-        function updateTodayArray(updatedArray){
-            
-            dataManager.todayProject.setTaskArray(updatedArray)
-            console.log(dataManager.todayProject.getTaskArray()[0].getName());
+        if(projectName == 'All Tasks'){
+            updateDomProjectDisp(dataManager.allTasksProject.getTaskArray())
+        }
+        if(projectName == 'This Week')
+        {
+            let thisWeekArray = dataManager.filterArrayByWeek(dataManager.allTasksProject.getTaskArray())
+            console.log(thisWeekArray);
+            dataManager.thisWeekProject.setTaskArray(thisWeekArray)
+            updateDomProjectDisp(thisWeekArray)
         }
 
-        function updateDomProjectDisp(updatedArray){
-            const currentDisplayedTasks = document.querySelectorAll('task-container')
-            
-            currentDisplayedTasks.forEach(element =>{
+
+
+        
+
+        function updateDomProjectDisp(updatedArray) {
+            const currentDisplayedTasks = document.querySelectorAll('.task-container')
+
+            currentDisplayedTasks.forEach(element => {
                 element.remove()
             })
-            if(projectName == 'Today'){
-                updatedArray.forEach(task =>{
+         
+                updatedArray.forEach(task => {
                     tasksContainer.appendChild(createDomTask(task))
                 })
-            }
+            
 
         }
 
@@ -84,6 +91,7 @@ const domManager = (function () {
             let domTask = createDomTask(newTask)
             tasksContainer.appendChild(domTask)
             dataManager.addTask(newTask)
+            taskTextInput.value = ''
 
         }
         toggleAddTaskView(true)
@@ -95,6 +103,7 @@ const domManager = (function () {
             let newProject = Project(projTextInput.value, [])
             let domProject = createDomProject(newProject)
             allProjContainer.append(domProject)
+            taskTextInput.value = ''
         }
 
         toggleAddProjView(true)
@@ -129,7 +138,7 @@ const domManager = (function () {
     }
 
 
-    function createDomTask(newTask, newDate) {
+    function createDomTask(newTask) {
         let domTaskContainer = document.createElement('div')
         let nameIconContainer = document.createElement('div')
         let deleteDateContainer = document.createElement('div')
@@ -138,34 +147,45 @@ const domManager = (function () {
         let dueDate = document.createElement('input')
         let deleteBtn = document.createElement('span')
 
-        domTaskContainer.classList.add('task-container')
-        nameIconContainer.classList.add('name-icon-container')
+        function defineClassesAndAttr(){
 
-        isDoneIcon.classList.add('material-icons')
-        isDoneIcon.classList.add('addtask-icon')
-        isDoneIcon.textContent = 'check_box_outline_blank'
+            domTaskContainer.classList.add('task-container')
+            nameIconContainer.classList.add('name-icon-container')
+    
+            isDoneIcon.classList.add('material-icons')
+            isDoneIcon.classList.add('addtask-icon')
+            isDoneIcon.textContent = 'check_box_outline_blank'
+    
+            taskName.textContent = newTask.getName()
+            taskName.classList.add('task-name')
+    
+            deleteDateContainer.classList.add('date-del-container')
+    
+            dueDate.setAttribute('type', 'date')
+            dueDate.setAttribute('id', 'due-date')
+            dueDate.setAttribute('name', 'due-date')
+            dueDate.classList.add('due-date')
+            if (newTask.getChosenDate() instanceof Date) {
+                dueDate.value = newTask.getChosenDate().toISOString().slice(0, 10)
+            }
+    
+            deleteBtn.classList.add('material-icons')
+            deleteBtn.classList.add('delete-task')
+            deleteBtn.textContent = 'delete'
+        }
 
-        taskName.textContent = newTask.getName()
-        taskName.classList.add('task-name')
 
-        deleteDateContainer.classList.add('date-del-container')
+        function appendEverything() {
+            deleteDateContainer.append(dueDate, deleteBtn)
+            nameIconContainer.append(isDoneIcon, taskName)
+            domTaskContainer.append(nameIconContainer, deleteDateContainer)
 
-        dueDate.setAttribute('type', 'date')
-        dueDate.setAttribute('id', 'due-date')
-        dueDate.setAttribute('name', 'due-date')
-        dueDate.classList.add('due-date')
-        if (newDate != undefined && newDate != null) dueDate.value = newDate;
+            setDateDelListeners(deleteBtn, dueDate, taskName.textContent)
+        }
 
-        deleteBtn.classList.add('material-icons')
-        deleteBtn.classList.add('delete-task')
-        deleteBtn.textContent = 'delete'
 
-        deleteDateContainer.append(dueDate, deleteBtn)
-        nameIconContainer.append(isDoneIcon, taskName)
-        domTaskContainer.append(nameIconContainer, deleteDateContainer)
-
-        setDateDelListeners(deleteBtn, dueDate, taskName.textContent)
-
+        defineClassesAndAttr()
+        appendEverything()
         return domTaskContainer;
 
 
@@ -176,14 +196,12 @@ const domManager = (function () {
 
     function setDateDelListeners(deleteTaskBtn, domDueDate, taskName) {
         domDueDate.addEventListener('change', () => {
-            if (domDueDate !== undefined ) {
+            if (domDueDate !== undefined) {
                 let dueDate = new Date(domDueDate.value)
-                let taskIndex = dataManager.allTasksProject.getTaskArray().findIndex(task =>{
+                let taskIndex = dataManager.allTasksProject.getTaskArray().findIndex(task => {
                     return task.getName() == taskName
                 })
-                console.log(dueDate);
-    ;
-                console.log(dataManager.allTasksProject.getTaskArray()[taskIndex]);
+
                 dataManager.allTasksProject.getTaskArray()[taskIndex].setDate(dueDate)
             }
 
@@ -197,7 +215,6 @@ const domManager = (function () {
     function deleteTask(e, taskName, currentProject) {
         dataManager.allTasksProject.deleteTask(taskName)
         e.target.closest('.task-container').remove()
-        console.log(dataManager.allTasksProject.getTaskArray());
     }
 
 
