@@ -1,3 +1,5 @@
+import { set } from "date-fns";
+
 const Task = function (taskName) {
 
     let isDone = false;
@@ -60,6 +62,16 @@ const Task = function (taskName) {
 
 
     }
+
+    const setDateToday = () => {
+        let today = new Date()
+        setDate(today)
+    }
+    const setDateWeekend = () =>{
+        let sat= new Date()
+        sat.setDate(sat.getDate() + (6-(sat.getDay())))
+        setDate(sat)
+    }
     
 
     const toggleDone = () => isDone = !isDone
@@ -70,7 +82,9 @@ const Task = function (taskName) {
         setDate,
         toggleDone,
         isTaskToday,
-        isTaskThisWeek
+        isTaskThisWeek,
+        setDateToday,
+        setDateWeekend
     }
 
 }
@@ -109,7 +123,7 @@ const Project = (projectName) => {
 
 const Projects = () => {
 
-    const chosenProject = 'allTasks'
+    let chosenProject = ''
     const projectArray = []
 
     const getChosenProject = () => chosenProject
@@ -125,9 +139,19 @@ const Projects = () => {
         projectArray.splice(projectArray.findIndex(project => project.getName() == projectName), 1)
     }
 
+    const getProjectIndex = (projectName) => {
+        return projectArray.findIndex(element => element.getName() == projectName)
+    }
+    const addTaskToProject = (projectName, task) =>{
+
+        let projectIndex = projectArray.findIndex(element => element.getName() == projectName)
+        projectArray[projectIndex].addTask(task)
+
+    }
+
 
     return {
-        addProject, deleteProject, getChosenProject, setChosenProject, getProjectArray
+        addProject, deleteProject, getChosenProject, setChosenProject, getProjectArray, addTaskToProject, getProjectIndex
     }
 }
 
