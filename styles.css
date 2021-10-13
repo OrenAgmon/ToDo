@@ -33,7 +33,10 @@ flex: 1;
 display: flex;
 }
 
+
+
 /* SIDE BAR*/
+
 .sidebar{
     align-self: stretch;
     background-color:#89C2D9 ;
@@ -81,6 +84,8 @@ display: flex;
 .side-proj .side-text{
     padding-right: 20px;
     font-size: 16px;
+    width: 100%;
+    text-align: start;
 }
 .side-proj .side-icon{
     padding-right: 4px;
@@ -161,6 +166,13 @@ align-self: center;
 }
 .check-icon{
     padding-right: 3px;
+}
+.delete-task:hover{
+    color: red;
+
+}
+.delete-task{
+    cursor: pointer;
 }
 
 #due-date{
