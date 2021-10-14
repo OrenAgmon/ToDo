@@ -4,6 +4,11 @@ const Task = function (taskName) {
 
     let isDone = false;
     let dueDate = ''
+    let belongTo = ''
+
+    const getBelong = () => belongTo
+    const setBelong =  (projectName) => belongTo = projectName
+
     const getName = () => taskName;
     const setName = (newName) => {
         taskName = newName;
@@ -84,7 +89,9 @@ const Task = function (taskName) {
         isTaskToday,
         isTaskThisWeek,
         setDateToday,
-        setDateWeekend
+        setDateWeekend,
+        getBelong,
+        setBelong
     }
 
 }
@@ -136,6 +143,10 @@ const Projects = () => {
         projectArray.push(currentProject)
     }
     const deleteProject = (projectName) => {
+        let index = getProjectIndex(projectName)
+        projectArray[index].getTaskArray.forEach(task =>{
+            
+        })
         projectArray.splice(projectArray.findIndex(project => project.getName() == projectName), 1)
     }
 

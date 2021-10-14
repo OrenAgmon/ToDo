@@ -11,7 +11,6 @@ const domManager = (function () {
     const tasksContainer = document.querySelector('.tasks-container')
 
 
-
     const allProjects = document.querySelectorAll('.side-proj')
     const applyProjectButtons = document.querySelectorAll('.apply-proj')
     const addProjBtn = document.querySelector('.create-project')
@@ -47,10 +46,10 @@ const domManager = (function () {
 
     allProjects.forEach(button => {
         button.addEventListener('click', (e) => {
-            if(e.target.textContent!= 'close'){
+            if (e.target.textContent != 'close') {
                 handleProjectClick(e.currentTarget.getAttribute('id'))
             }
-            
+
         })
     })
 
@@ -61,7 +60,8 @@ const domManager = (function () {
             let todayArray = dataManager.filterArrayByDay(dataManager.allTasksProject.getTaskArray())
             dataManager.todayProject.setTaskArray(todayArray)
             dataManager.toggleIsEditingToday()
-            
+            mainTitle.textContent = projectId
+
 
             updateDomProjectDisp(todayArray)
 
@@ -70,46 +70,50 @@ const domManager = (function () {
         else if (projectId == 'All Tasks') {
             updateDomProjectDisp(dataManager.allTasksProject.getTaskArray())
             dataManager.toggleEditAll()
+            mainTitle.textContent = projectId
+
         }
         else if (projectId == 'This Week') {
             let thisWeekArray = dataManager.filterArrayByWeek(dataManager.allTasksProject.getTaskArray())
+
             dataManager.thisWeekProject.setTaskArray(thisWeekArray)
             dataManager.toggleEditingWeek()
+            mainTitle.textContent = projectId
 
             updateDomProjectDisp(thisWeekArray)
 
 
         }
 
-        else{
+        else {
             dataManager.customProjects.setChosenProject(projectId)
 
         }
-         if(dataManager.customProjects.getChosenProject() != '') {
-             dataManager.toggleEditAll()
+        if (dataManager.customProjects.getChosenProject() != '') {
+            dataManager.toggleEditAll()
             let chosenProjectArray = dataManager.customProjects.getProjectArray()[dataManager.customProjects.getProjectIndex(projectId)].getTaskArray()
             updateDomProjectDisp(chosenProjectArray)
+            mainTitle.textContent = 'Project ' + dataManager.customProjects.getChosenProject()
 
         }
 
-        mainTitle.textContent = projectId
 
 
 
         function updateDomProjectDisp(updatedArray) {
             const currentDisplayedTasks = document.querySelectorAll('.task-container')
-            if(currentDisplayedTasks.length > 0){
+            if (currentDisplayedTasks.length > 0) {
                 currentDisplayedTasks.forEach(element => {
                     element.remove()
                 })
             }
-         
-            if(updatedArray.length > 0){
+
+            if (updatedArray.length > 0) {
                 updatedArray.forEach(task => {
                     tasksContainer.appendChild(createDomTask(task))
                 })
             }
-          
+
         }
 
 
@@ -119,12 +123,12 @@ const domManager = (function () {
     function handleApplyTask(clickedButton) {
         if (clickedButton == 'Save') {
             let newTask = Task(taskTextInput.value)
-            if(dataManager.getIsEditingToday()){
+            if (dataManager.getIsEditingToday()) {
                 newTask.setDateToday()
-            } 
-            if(dataManager.getIsEditingWeek()){
+            }
+            if (dataManager.getIsEditingWeek()) {
                 newTask.setDateWeekend()
-            } 
+            }
             let chosenProject = dataManager.customProjects.getChosenProject()
             dataManager.addTask(newTask)
 
@@ -132,8 +136,9 @@ const domManager = (function () {
             tasksContainer.appendChild(domTask)
             taskTextInput.value = ''
 
-            if(chosenProject != ''){
+            if (chosenProject != '') {
                 dataManager.customProjects.addTaskToProject(chosenProject, newTask)
+                newTask.setBelong(chosenProject)
             }
 
 
@@ -166,7 +171,7 @@ const domManager = (function () {
         rightProjSection.classList.add('right-proj-section')
         projectButton.classList.add('side-proj')
         projectButton.classList.add('custom-proj')
-        projectButton.setAttribute('id', `${newProject}`)
+        projectButton.setAttribute('id', `${newProject.getName()}`)
 
         projectText.classList.add('side-text')
         projectText.textContent = newProject.getName()
@@ -182,20 +187,20 @@ const domManager = (function () {
         rightProjSection.append(projectIcon, projectText)
         projectButton.append(rightProjSection, projectDeleteIcon)
 
-        projectButton.addEventListener('click', (e) =>{
-            handleProjectClick(e.target.textContent)
+        projectButton.addEventListener('click', (e) => {
+            handleProjectClick(e.currentTarget.getAttribute('id'))
         })
-        projectDeleteIcon.addEventListener('click', (e) =>{
+        projectDeleteIcon.addEventListener('click', (e) => {
             deleteProject(e)
         })
 
         return projectButton;
     }
 
-    function deleteProject(e){
-      e.target.closest('.custom-proj').remove()
-      dataManager.customProjects.deleteProject(e.target.textContent)  
-      dataManager.customProjects.getProjectArray()
+    function deleteProject(e) {
+        e.target.closest('.custom-proj').remove()
+        dataManager.customProjects.deleteProject(e.target.textContent)
+        dataManager.customProjects.getProjectArray()
     }
 
 
@@ -241,7 +246,7 @@ const domManager = (function () {
             nameIconContainer.append(isDoneIcon, taskName)
             domTaskContainer.append(nameIconContainer, deleteDateContainer)
 
-            setDateDelListeners(deleteBtn, dueDate, taskName.textContent)
+            setDateDelListeners(deleteBtn, dueDate, newTask)
         }
 
 
@@ -255,12 +260,12 @@ const domManager = (function () {
 
     }
 
-    function setDateDelListeners(deleteTaskBtn, domDueDate, taskName) {
+    function setDateDelListeners(deleteTaskBtn, domDueDate, newTask) {
         domDueDate.addEventListener('change', () => {
             if (domDueDate !== undefined) {
                 let dueDate = new Date(domDueDate.value)
                 let taskIndex = dataManager.allTasksProject.getTaskArray().findIndex(task => {
-                    return task.getName() == taskName
+                    return task.getName() == newTask.getName()
                 })
 
                 dataManager.allTasksProject.getTaskArray()[taskIndex].setDate(dueDate)
@@ -268,14 +273,25 @@ const domManager = (function () {
 
         })
         deleteTaskBtn.addEventListener('click', (e) => {
-            deleteTask(e, taskName)
+            deleteTask(e, newTask)
         })
 
     }
 
-    function deleteTask(e, taskName, currentProject) {
-        dataManager.allTasksProject.deleteTask(taskName)
+    function deleteTask(e, newTask) {
+        if (dataManager.customProjects.getChosenProject() != '') {
+            let projectIndex = dataManager.customProjects.
+                getProjectIndex(dataManager.customProjects.getChosenProject())
+            dataManager.customProjects.getProjectArray()[projectIndex].deleteTask(newTask.getName())
+
+        }
+        if (newTask.getBelong() != '')
+            dataManager.allTasksProject.deleteTask(newTask.getName())
         e.target.closest('.task-container').remove()
+        let chosen = newTask.getBelong()
+        let projectIndex = dataManager.customProjects.getProjectIndex(chosen)
+        dataManager.customProjects.getProjectArray()
+        [projectIndex].deleteTask(newTask.getName())
     }
 
 
