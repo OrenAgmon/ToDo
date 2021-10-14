@@ -56,6 +56,8 @@ const domManager = (function () {
 
     function handleProjectClick(projectId) {
         dataManager.customProjects.setChosenProject('')
+        toggleAddTaskView(true)
+        toggleAddProjView(true)
         if (projectId == 'Today') {
             let todayArray = dataManager.filterArrayByDay(dataManager.allTasksProject.getTaskArray())
             dataManager.todayProject.setTaskArray(todayArray)
@@ -199,8 +201,17 @@ const domManager = (function () {
 
     function deleteProject(e) {
         e.target.closest('.custom-proj').remove()
-        dataManager.customProjects.deleteProject(e.target.textContent)
+        dataManager.deleteProject(e.target.closest('.custom-proj').getAttribute('id'))
         dataManager.customProjects.getProjectArray()
+
+        if(e.target.closest('.custom-proj').getAttribute('id') == dataManager.customProjects.getChosenProject()){
+            handleProjectClick('All Tasks')
+        }
+        if(dataManager.customProjects.getChosenProject() == ''){
+            if(dataManager.getIsEditingToday()) handleProjectClick('Today')
+            else if(dataManager.getIsEditingWeek()) handleProjectClick('This Week')
+            else handleProjectClick('All Tasks')
+        }
     }
 
 
@@ -285,8 +296,8 @@ const domManager = (function () {
             dataManager.customProjects.getProjectArray()[projectIndex].deleteTask(newTask.getName())
 
         }
-        if (newTask.getBelong() != '')
-            dataManager.allTasksProject.deleteTask(newTask.getName())
+        if (newTask.getBelong() != '') //deleting task from a custom project
+        dataManager.allTasksProject.deleteTask(newTask.getName())
         e.target.closest('.task-container').remove()
         let chosen = newTask.getBelong()
         let projectIndex = dataManager.customProjects.getProjectIndex(chosen)

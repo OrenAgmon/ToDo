@@ -29,7 +29,14 @@ const dataManager = (function () {
         
     }
 
-
+    const deleteProject = (projectName) => {
+        let index = customProjects.getProjectIndex(projectName);
+        customProjects.getProjectArray()[index].getTaskArray().forEach(task =>{
+            allTasksProject.deleteTask(task.getName())
+        })
+        customProjects.getProjectArray().splice((index),1)
+        
+    }
 
     const addTask = (newTask) => {
         allTasksProject.addTask(newTask)
@@ -63,7 +70,8 @@ const dataManager = (function () {
         , toggleIsEditingToday
         , getIsEditingWeek
         , toggleEditingWeek,
-        toggleEditAll
+        toggleEditAll,
+        deleteProject
     }
 
 

@@ -142,13 +142,7 @@ const Projects = () => {
     const addProject = (currentProject) => {
         projectArray.push(currentProject)
     }
-    const deleteProject = (projectName) => {
-        let index = getProjectIndex(projectName)
-        projectArray[index].getTaskArray.forEach(task =>{
-            
-        })
-        projectArray.splice(projectArray.findIndex(project => project.getName() == projectName), 1)
-    }
+
 
     const getProjectIndex = (projectName) => {
         return projectArray.findIndex(element => element.getName() == projectName)
@@ -162,7 +156,7 @@ const Projects = () => {
 
 
     return {
-        addProject, deleteProject, getChosenProject, setChosenProject, getProjectArray, addTaskToProject, getProjectIndex
+        addProject, getChosenProject, setChosenProject, getProjectArray, addTaskToProject, getProjectIndex
     }
 }
 

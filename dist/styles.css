@@ -59,9 +59,7 @@ display: flex;
 
 }
 
-.side-proj:focus{
-    background-color: #D1E7F0;
-}
+
 .side-proj:hover, .create-project:hover{
     background-color: #D1E7F0;
 }
