@@ -5,6 +5,10 @@ const Task = function (taskName) {
     let isDone = false;
     let dueDate = ''
     let belongTo = ''
+    let taskId = Math.random().toString(16).slice(2)
+
+    const getId = () => taskId
+    const setId = (id) => taskId = id;
 
     const getBelong = () => belongTo
     const setBelong =  (projectName) => belongTo = projectName
@@ -91,7 +95,10 @@ const Task = function (taskName) {
         setDateToday,
         setDateWeekend,
         getBelong,
-        setBelong
+        setBelong,
+        getId,
+        setId
+        
     }
 
 }
@@ -104,8 +111,8 @@ const Project = (projectName) => {
     const addTask = (currentTask) => {
         taskArray.push(currentTask);
     }
-    const deleteTask = (taskName) => {
-        taskArray.splice(taskArray.findIndex(task => task.getName() == taskName), 1)
+    const deleteTask = (taskId) => {
+        taskArray.splice(taskArray.findIndex(task => task.getId() == taskId), 1)
     }
   
 

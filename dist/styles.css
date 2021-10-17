@@ -166,6 +166,14 @@ align-self: center;
 }
 .check-icon{
     padding-right: 3px;
+    cursor:pointer;
+    transition: 0.05s
+
+
+}
+.check-icon:hover{
+    color: green;
+    transform: scale(1.5);
 }
 .delete-task:hover{
     color: red;

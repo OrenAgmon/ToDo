@@ -1,6 +1,7 @@
 import { de } from 'date-fns/locale'
 import { Task, Project, Projects } from './factories'
 
+
 const dataManager = (function () {
     let allTasksProject = Project('allTasks', [])
     let todayProject = Project('today', [])
@@ -32,7 +33,7 @@ const dataManager = (function () {
     const deleteProject = (projectName) => {
         let index = customProjects.getProjectIndex(projectName);
         customProjects.getProjectArray()[index].getTaskArray().forEach(task =>{
-            allTasksProject.deleteTask(task.getName())
+            allTasksProject.deleteTask(task.getId())
         })
         customProjects.getProjectArray().splice((index),1)
         
