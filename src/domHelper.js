@@ -60,6 +60,8 @@ const domHelper = (function (){
                     })
     
                     dataManager.allTasksProject.getTaskArray()[taskIndex].setDate(dueDate)
+                    if(dataManager.getIsEditingToday()) domManager.handleProjectClick('Today')
+                    if(dataManager.getIsEditingWeek()) domManager.handleProjectClick('This Week')
                 }
     
             })
@@ -210,7 +212,62 @@ const domHelper = (function (){
             allProjContainer.appendChild(domProject)
         })
     }
-    
+
+    function displayErrorModal(problem){
+        const errorModal = document.querySelector('#problem-modal')
+        const overlay = document.querySelector('.modal-overlay')
+        const errorText = document.querySelector('#modal-problem-dsp')
+        const okBtn = document.querySelector('#modal-ok-btn')
+        
+        errorText.textContent = problem
+        activateModal()
+        
+        okBtn.addEventListener('click', ()=>{
+            deactivateModal()
+        })
+        overlay.addEventListener('click', ()=>{
+            deactivateModal()
+        })
+
+
+        function activateModal(){
+            errorModal.classList.add('active')
+            overlay.classList.add('active')
+        }
+
+        function deactivateModal(){
+            errorModal.classList.remove('active')
+            overlay.classList.remove('active')
+             document.querySelector('#task-text-input').focus()
+             document.querySelector('#new-proj-text').focus()
+
+
+
+        }
+    }
+
+    const checkTaskInput = (input) =>{
+        if(input == ''){
+            displayErrorModal('Sorry, the name cannot be empty.')
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    const checkProjectInput = (input) =>{
+        if(dataManager.customProjects.getProjectIndex(input) != -1){
+            displayErrorModal('Sorry, projects need to have unique names')
+            return false;
+        }
+        else if(input == ''){
+            displayErrorModal('Sorry, the name cannot be empty')
+        }
+        else{
+            return true;
+        }
+    }
 
 
 
@@ -220,7 +277,9 @@ const domHelper = (function (){
             updateTaskDomDisp,
             toggleAddProjView,
             toggleAddTaskView,
-            updateProjDomDisplay
+            updateProjDomDisplay,
+            checkTaskInput,
+            checkProjectInput
     }
 
 })()

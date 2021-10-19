@@ -28,6 +28,50 @@ header{
 
 
 
+.modal-overlay{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    pointer-events: none;
+}
+
+
+.modal-container{
+    position: absolute;
+    width: 500px;
+    height: 200px;
+    background-color: white;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    margin:auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    border-radius: 10px;
+    border: 1px solid black;
+    display: none;
+
+
+    
+}
+
+.modal-container.active{
+    display: flex;
+
+}
+.modal-overlay.active{
+    pointer-events: all;
+    display: block;
+}
+
+
+
 .main-section{
 flex: 1;
 display: flex;

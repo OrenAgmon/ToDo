@@ -7,6 +7,7 @@ import { domHelper } from "./domHelper";
 import { localStorageHelper } from "./local-storage";
 
 window.onload = () => {
+   // localStorage.clear()
     localStorageHelper.rebuildTasksAndProjects()
     domManager.handleProjectClick('All Tasks')
     domHelper.updateProjDomDisplay(dataManager.customProjects.getProjectArray())
@@ -71,6 +72,8 @@ const domManager = (function () {
             let todayArray = dataManager.filterArrayByDay(dataManager.allTasksProject.getTaskArray())
             dataManager.todayProject.setTaskArray(todayArray)
             dataManager.toggleIsEditingToday()
+            if(dataManager.getIsEditingWeek()) dataManager.toggleEditingWeek()
+            
             mainTitle.textContent = projectId
 
 
@@ -89,6 +92,7 @@ const domManager = (function () {
 
             dataManager.thisWeekProject.setTaskArray(thisWeekArray)
             dataManager.toggleEditingWeek()
+            if(dataManager.getIsEditingToday()) toggleIsEditingToday()
             mainTitle.textContent = projectId
 
             domHelper.updateTaskDomDisp(thisWeekArray)
@@ -118,45 +122,67 @@ const domManager = (function () {
     }
 
     function handleApplyTask(clickedButton) {
-        if (clickedButton == 'Save') {
-            let newTask = Task(taskTextInput.value)
-            if (dataManager.getIsEditingToday()) {
-                newTask.setDateToday()
+      
+
+
+            if (clickedButton == 'Save' && domHelper.checkTaskInput(taskTextInput.value)) {
+                
+
+                let newTask = Task(taskTextInput.value)
+                if (dataManager.getIsEditingToday()) {
+                    newTask.setDateToday()
+                }
+                if (dataManager.getIsEditingWeek()) {
+                    newTask.setDateWeekend()
+                }
+                let chosenProject = dataManager.customProjects.getChosenProject()
+                dataManager.addTask(newTask)
+
+
+                if (chosenProject != '') {
+                    dataManager.customProjects.addTaskToProject(chosenProject, newTask)
+                    newTask.setBelong(chosenProject)
+                }
+
+                let domTask = domHelper.createDomTask(newTask)
+                tasksContainer.appendChild(domTask)
+
+                domHelper.toggleAddTaskView(true)
+                taskTextInput.value = ''
+
+
             }
-            if (dataManager.getIsEditingWeek()) {
-                newTask.setDateWeekend()
+            else if (clickedButton == 'Delete'){
+                domHelper.toggleAddTaskView(true)
+                taskTextInput.value = ''
             }
-            let chosenProject = dataManager.customProjects.getChosenProject()
-            dataManager.addTask(newTask)
-
-
-            if (chosenProject != '') {
-                dataManager.customProjects.addTaskToProject(chosenProject, newTask)
-                newTask.setBelong(chosenProject)
-            }
-
-            let domTask = domHelper.createDomTask(newTask)
-            tasksContainer.appendChild(domTask)
-            taskTextInput.value = ''
-
-
-
+          
+            
+            
+          
         }
-        domHelper.toggleAddTaskView(true)
 
 
-    }
+    
 
     function handleApplyProject(clickedButton) {
-        if (clickedButton == 'Save') {
+        if (clickedButton == 'Save' && domHelper.checkProjectInput(projTextInput.value)) {
             let newProject = Project(projTextInput.value, [])
             dataManager.customProjects.addProject(newProject)
 
             let domProject = domHelper.createDomProject(newProject)
             allProjContainer.append(domProject)
-            projTextInput.value = ''
+
+            domHelper.toggleAddProjView(true)
         }
-        domHelper.toggleAddProjView(true)
+        else if (clickedButton == 'Discard'){
+            domHelper.toggleAddProjView(true)
+
+        }
+        projTextInput.value = ''
+
+        
+
 
 
     }
@@ -179,13 +205,11 @@ const domManager = (function () {
 
 
 
-// console.log(localStorageHelper.rebuildTasksAndProjects());
 // domManager.handleProjectClick('All Tasks')
 
 window.addEventListener('beforeunload', () => {
     localStorageHelper.addAllTasksToStorage()
 })
 
-console.log(localStorage);
 
 export { domManager }

@@ -34,6 +34,7 @@ const dataManager = (function () {
         let index = customProjects.getProjectIndex(projectName);
         customProjects.getProjectArray()[index].getTaskArray().forEach(task =>{
             allTasksProject.deleteTask(task.getId())
+            localStorage.removeItem(task.getId())
         })
         customProjects.getProjectArray().splice((index),1)
         
@@ -45,7 +46,6 @@ const dataManager = (function () {
 
     const filterArrayByWeek = (taskArray) => {
         let filteredArray = taskArray.filter(task => {
-            console.log(task.isTaskThisWeek());
             return task.isTaskThisWeek();
 
         })

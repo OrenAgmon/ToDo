@@ -56,7 +56,10 @@ const localStorageHelper = (function () {
             function parseTask(key){
                 let stringTask = JSON.parse(localStorage.getItem(key))
                 let taskedTask = Task(stringTask.name)
-                taskedTask.setDate(new Date(stringTask.dueDate))
+                if(stringTask.dueDate != ''){
+                    taskedTask.setDate(new Date(stringTask.dueDate))
+
+                }
                 taskedTask.setBelong(stringTask.belongTo)
                 taskedTask.setId(stringTask.id)
                 return taskedTask
